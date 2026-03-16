@@ -20,7 +20,9 @@ data class ProductResponseDto(
     @SerialName("priceCents")
     val priceCents: Int? = null,
     @SerialName("category")
-    val category: String,
+    val category: String? = null,
     @SerialName("stock")
-    val stock: String
+    val stock: Int? = null,
+    @SerialName("imageUrl")
+    val imageUrl: String? = null
 )
