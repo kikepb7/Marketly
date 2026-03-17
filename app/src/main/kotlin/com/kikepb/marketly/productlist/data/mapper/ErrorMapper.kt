@@ -1,4 +1,4 @@
-package com.kikepb.marketly.productlist.data.remote.mapper
+package com.kikepb.marketly.productlist.data.mapper
 
 import com.kikepb.marketly.core.domain.model.AppError
 import com.kikepb.marketly.core.domain.model.AppError.NetworkError
