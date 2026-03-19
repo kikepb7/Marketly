@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Marketly</string>
+    <string name="marketly_filter_menu_categories">Categorías</string>
+    <string name="marketly_all_text">Todas</string>
+    <string name="marketly_filter_menu_order_by">Ordenar por</string>
+    <string name="marketly_filter_menu_price_high">Precio ↑</string>
+    <string name="marketly_filter_menu_price_low">Precio ↓</string>
+    <string name="marketly_filter_menu_discount">Descuento</string>
+    <string name="marketly_app_name">Marketly</string>
+    <string name="marketly_home_top_bar_hide_filters">Ocultar filtros</string>
+    <string name="marketly_home_top_bar_show_filter">Mostrar filtros</string>
+    <string name="marketly_product_list_title">%1$d productos</string>
+    <string name="marketly_lens_icon">🔎</string>
 </resources>
