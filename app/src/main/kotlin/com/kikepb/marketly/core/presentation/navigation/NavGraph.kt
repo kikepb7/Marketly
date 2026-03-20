@@ -9,12 +9,13 @@ import com.kikepb.marketly.core.presentation.navigation.Screen.Cart
 import com.kikepb.marketly.core.presentation.navigation.Screen.ProductDetail
 import com.kikepb.marketly.core.presentation.navigation.Screen.ProductList
 import com.kikepb.marketly.core.presentation.navigation.Screen.Setting
+import com.kikepb.marketly.productlist.presentation.ProductListRoot
 
 @Composable
 fun NavGraph() {
     val backStack = rememberNavBackStack(ProductList)
     val entries = entryProvider<NavKey> {
-        entry<ProductList> {}
+        entry<ProductList> { ProductListRoot() }
         entry<Cart> {}
         entry<Setting> {}
         entry<ProductDetail> {}
