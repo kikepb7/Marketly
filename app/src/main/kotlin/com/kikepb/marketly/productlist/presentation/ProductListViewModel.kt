@@ -2,7 +2,7 @@ package com.kikepb.marketly.productlist.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kikepb.marketly.productlist.domain.model.ProductModel
+import com.kikepb.marketly.productlist.domain.model.ProductWithPromotionModel
 import com.kikepb.marketly.productlist.domain.model.SortOptionModel
 import com.kikepb.marketly.productlist.domain.model.SortOptionModel.NONE
 import com.kikepb.marketly.productlist.domain.usecase.GetProductsUseCase
@@ -42,7 +42,7 @@ class ProductListViewModel @Inject constructor(
 
         getProductsUseCase()
             .onEach { products ->
-                val categories = products.map { it.category }.distinct().sorted()
+                val categories = products.map { it.product.category }.distinct().sorted()
                 _uiState.update {
                     Success(
                         products = products,
@@ -73,7 +73,7 @@ sealed class ProductListUiState {
     data object Loading: ProductListUiState()
     data class Error(val message: String): ProductListUiState()
     data class Success(
-        val products: List<ProductModel>,
+        val products: List<ProductWithPromotionModel>,
         val categories: List<String>,
         val selectedCategory: String?,
         val sortOption: SortOptionModel
