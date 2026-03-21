@@ -143,8 +143,8 @@ fun ProductListScreen(
                         }
                     } else {
                         LazyColumn {
-                            items(state.products) { product ->
-                                MarketlyProductItem(product = product, onClick = {})
+                            items(state.products) { item ->
+                                MarketlyProductItem(item = item, onClick = {})
                             }
                         }
                     }
