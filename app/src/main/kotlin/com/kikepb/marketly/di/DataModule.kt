@@ -6,7 +6,9 @@ import com.kikepb.marketly.core.domain.data.utils.DefaultDispatchersProvider
 import com.kikepb.marketly.core.domain.utils.DispatchersProvider
 import com.kikepb.marketly.productlist.data.local.database.MarketlyDatabase
 import com.kikepb.marketly.productlist.data.repository.ProductRepositoryImpl
+import com.kikepb.marketly.productlist.data.repository.PromotionRepositoryImpl
 import com.kikepb.marketly.productlist.domain.repository.ProductRepository
+import com.kikepb.marketly.productlist.domain.repository.PromotionRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,6 +27,10 @@ object DataModule {
     @Provides
     @Singleton
     fun provideProductRepository(productRepositoryImpl: ProductRepositoryImpl): ProductRepository = productRepositoryImpl
+
+    @Provides
+    @Singleton
+    fun providePromotionRepository(promotionRepositoryImpl: PromotionRepositoryImpl): PromotionRepository = promotionRepositoryImpl
 
     @Provides
     @Singleton

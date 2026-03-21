@@ -15,14 +15,13 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ProductRepositoryImpl
 @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
-    private val localDatasource: LocalDataSource,
+    private val localDataSource: LocalDataSource,
     private val dispatchersProvider: DispatchersProvider
 ): ProductRepository {
 
@@ -30,7 +29,7 @@ class ProductRepositoryImpl
     private val refreshMutex = Mutex()
 
     override fun getProducts(): Flow<List<ProductModel>> {
-        return localDatasource.getAllProducts()
+        return localDataSource.getAllProducts()
             .map { entities -> entities.mapNotNull { it.toProductModel() } }
             .onStart {
                 refreshScope.launch {
@@ -64,7 +63,7 @@ class ProductRepositoryImpl
             val products = remoteDataSource.getProducts().getOrThrow()
             val productsEntity = products.map { it.toProductEntity() }
 
-            localDatasource.saveProducts(productsEntity = productsEntity)
+            localDataSource.saveProducts(productsEntity = productsEntity)
         }
     }
 }

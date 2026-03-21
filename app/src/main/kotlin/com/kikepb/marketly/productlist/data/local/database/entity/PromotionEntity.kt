@@ -7,11 +7,11 @@ import androidx.room.PrimaryKey
 data class PromotionEntity(
     @PrimaryKey
     val id: String,
-    val productId: String,
+    val productIds: String,
     val type: String,
-    val percent: Int?,
-    val buyX: Int?,
-    val payY: Int?,
-    val startAtEpoch: Long?,
-    val endAtEpoch: Long?
+    val percent: Int? = null,
+    val buyX: Int? = null,
+    val payY: Int? = null,
+    val startAtEpoch: Long,
+    val endAtEpoch: Long
 )
