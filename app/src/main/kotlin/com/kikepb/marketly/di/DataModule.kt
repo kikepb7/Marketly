@@ -1,14 +1,19 @@
 package com.kikepb.marketly.di
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
 import com.kikepb.marketly.core.domain.data.utils.DefaultDispatchersProvider
 import com.kikepb.marketly.core.domain.utils.DispatchersProvider
 import com.kikepb.marketly.productlist.data.local.database.MarketlyDatabase
 import com.kikepb.marketly.productlist.data.repository.ProductRepositoryImpl
 import com.kikepb.marketly.productlist.data.repository.PromotionRepositoryImpl
+import com.kikepb.marketly.productlist.data.repository.SettingsRepositoryImpl
 import com.kikepb.marketly.productlist.domain.repository.ProductRepository
 import com.kikepb.marketly.productlist.domain.repository.PromotionRepository
+import com.kikepb.marketly.productlist.domain.repository.SettingsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,6 +21,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings")
 @Module
 @InstallIn(SingletonComponent::class)
 object DataModule {
@@ -34,6 +40,10 @@ object DataModule {
 
     @Provides
     @Singleton
+    fun provideSettingsRepository(settingsRepositoryImpl: SettingsRepositoryImpl): SettingsRepository = settingsRepositoryImpl
+
+    @Provides
+    @Singleton
     fun providesDatabase(@ApplicationContext context: Context): MarketlyDatabase =
         Room.databaseBuilder(
             context = context,
@@ -46,4 +56,8 @@ object DataModule {
 
     @Provides
     fun providesPromotionDao(database: MarketlyDatabase) = database.promotionDao()
+
+    @Provides
+    @Singleton
+    fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> = context.dataStore
 }
