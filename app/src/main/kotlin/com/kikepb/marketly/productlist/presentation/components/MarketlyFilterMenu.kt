@@ -30,7 +30,7 @@ fun MarketlyFilterMenu(
     state: Success,
     modifier: Modifier = Modifier,
     onCategorySelected: (String?) -> Unit,
-    onSortSelected: (SortOptionModel?) -> Unit
+    onSortSelected: (SortOptionModel) -> Unit
 ) {
     Card(
         modifier = modifier
@@ -86,7 +86,7 @@ fun MarketlyFilterMenu(
                 )
                 FilterChip(
                     selected = state.sortOption == DISCOUNT,
-                    onClick = { onSortSelected(NONE) },
+                    onClick = { onSortSelected(DISCOUNT) },
                     label = { Text(text = stringResource(RS.marketly_filter_menu_discount), style = MaterialTheme.typography.labelSmall) },
                     modifier = Modifier.weight(1f)
                 )

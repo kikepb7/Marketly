@@ -44,7 +44,7 @@ fun ProductListRoot(
 ) {
     val state by productListViewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
-    val isFiltersVisible by productListViewModel.filtersVisible.collectAsStateWithLifecycle()
+    val isFiltersVisible by productListViewModel.filterVisible.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
         productListViewModel.events.collect { event ->
@@ -72,7 +72,7 @@ fun ProductListScreen(
     snackbarHostState: SnackbarHostState,
     isFilterVisible: Boolean,
     onCategorySelected: (String?) -> Unit,
-    onSortSelected: (SortOptionModel?) -> Unit,
+    onSortSelected: (SortOptionModel) -> Unit,
     onSetFiltersVisibility: (Boolean) -> Unit
 ) {
     Scaffold(
