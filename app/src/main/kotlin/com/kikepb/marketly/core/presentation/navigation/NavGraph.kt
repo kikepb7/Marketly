@@ -10,14 +10,15 @@ import com.kikepb.marketly.core.presentation.navigation.Screen.ProductDetail
 import com.kikepb.marketly.core.presentation.navigation.Screen.ProductList
 import com.kikepb.marketly.core.presentation.navigation.Screen.Setting
 import com.kikepb.marketly.productlist.presentation.ProductListRoot
+import com.kikepb.marketly.settings.presentation.SettingsScreenRoot
 
 @Composable
 fun NavGraph() {
     val backStack = rememberNavBackStack(ProductList)
     val entries = entryProvider<NavKey> {
-        entry<ProductList> { ProductListRoot() }
+        entry<ProductList> { ProductListRoot(navigateToSettings = { backStack.add(element = Setting)}) }
         entry<Cart> {}
-        entry<Setting> {}
+        entry<Setting> { SettingsScreenRoot(onBack = { backStack.removeLastOrNull() }) }
         entry<ProductDetail> {}
     }
 

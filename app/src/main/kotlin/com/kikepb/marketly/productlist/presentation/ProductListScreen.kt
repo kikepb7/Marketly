@@ -40,7 +40,8 @@ import com.kikepb.marketly.productlist.presentation.components.MarketlyProductIt
 
 @Composable
 fun ProductListRoot(
-    productListViewModel: ProductListViewModel = hiltViewModel()
+     productListViewModel: ProductListViewModel = hiltViewModel(),
+    navigateToSettings: () -> Unit
 ) {
     val state by productListViewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -62,7 +63,8 @@ fun ProductListRoot(
         isFilterVisible = isFiltersVisible,
         onCategorySelected = { category -> productListViewModel.setCategory(category = category) },
         onSortSelected = { sortOption -> productListViewModel.setSortOption(sortOption = sortOption) },
-        onSetFiltersVisibility = { showFilters -> productListViewModel.setFilterVisible(showFilters = showFilters) }
+        onSetFiltersVisibility = { showFilters -> productListViewModel.setFilterVisible(showFilters = showFilters) },
+        navigateToSettings = navigateToSettings
     )
 }
 
@@ -73,14 +75,15 @@ fun ProductListScreen(
     isFilterVisible: Boolean,
     onCategorySelected: (String?) -> Unit,
     onSortSelected: (SortOptionModel) -> Unit,
-    onSetFiltersVisibility: (Boolean) -> Unit
+    onSetFiltersVisibility: (Boolean) -> Unit,
+    navigateToSettings: () -> Unit
 ) {
     Scaffold(
         topBar = {
             MarketlyHomeTopBar(
                 isFiltersVisible = isFilterVisible,
                 onFiltersSelected = { showFilters -> onSetFiltersVisibility(showFilters) },
-                onSettingsSelected = {}
+                onSettingsSelected = navigateToSettings
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
