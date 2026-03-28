@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
-import com.kikepb.marketly.core.presentation.components.MarketlyAddToCartButton
+import com.kikepb.marketly.detail.presentation.components.MarketlyAddToCartButton
 import com.kikepb.marketly.R.drawable as RD
 import com.kikepb.marketly.core.presentation.components.MarketlyTopAppBar
 import com.kikepb.marketly.productlist.domain.model.ProductPromotion.BuyXPayY

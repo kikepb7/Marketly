@@ -1,4 +1,4 @@
-package com.kikepb.marketly.core.presentation.components
+package com.kikepb.marketly.detail.presentation.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
