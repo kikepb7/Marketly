@@ -16,11 +16,14 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale.Companion.Crop
@@ -58,9 +61,12 @@ fun ProductDetailRoot(
 
 @Composable
 fun ProductDetailScreen(state: ProductDetailUiState, onBack: () -> Unit, addProductToCart: () -> Unit) {
+    val snackbarHostState = remember { SnackbarHostState() }
+
     Scaffold(
         topBar = { MarketlyTopAppBar(title = state.item?.product?.name.orEmpty(), onBackSelected = onBack) },
-        bottomBar = { MarketlyAddToCartButton(product = state.item?.product, isLoading = state.isLoading, addProductToCart = addProductToCart)}
+        bottomBar = { MarketlyAddToCartButton(product = state.item?.product, isLoading = state.isLoading, addProductToCart = addProductToCart) },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -69,9 +75,10 @@ fun ProductDetailScreen(state: ProductDetailUiState, onBack: () -> Unit, addProd
                 .padding(all = 16.dp)
         ) {
             if (state.isLoading) {
-                Box(modifier = Modifier
-                    .fillMaxSize(),
-                    contentAlignment = Alignment.Center) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
                     CircularProgressIndicator()
                 }
             } else {
@@ -99,7 +106,7 @@ fun ProductDetailScreen(state: ProductDetailUiState, onBack: () -> Unit, addProd
                     ) {
                         Card(
                             modifier = Modifier.fillMaxWidth(),
-                            elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
                             shape = RoundedCornerShape(size = 16.dp),
                             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
                         ) {
@@ -133,6 +140,7 @@ fun ProductDetailScreen(state: ProductDetailUiState, onBack: () -> Unit, addProd
                                         color = MaterialTheme.colorScheme.onSecondaryContainer
                                     )
                                 }
+
                                 if (product.description.isNotBlank()) {
                                     Text(
                                         text = product.description,
@@ -185,7 +193,7 @@ fun ProductDetailScreen(state: ProductDetailUiState, onBack: () -> Unit, addProd
 
                                 if (promotion is BuyXPayY) {
                                     Surface(
-                                        shape = RoundedCornerShape(8.dp),
+                                        shape = RoundedCornerShape(size = 8.dp),
                                         color = MaterialTheme.colorScheme.errorContainer
                                     ) {
                                         Text(

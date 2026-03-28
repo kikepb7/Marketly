@@ -28,6 +28,7 @@ fun MarketlyAddToCartButton(
     product: ProductModel?,
     isLoading: Boolean,
     addProductToCart: () -> Unit
+    // onLongClick: () -> Unit  -----> Add or reduce items ¿?
 ) {
     product?.let {
         if (it.stock > 0) MarketlyAddToCartButtonWithStock(modifier = modifier, product = it, isLoading = isLoading, addProductToCart = addProductToCart)

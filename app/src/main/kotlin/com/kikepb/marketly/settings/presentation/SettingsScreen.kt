@@ -117,7 +117,7 @@ fun SettingsScreen(
                             )
                         }
                         Switch(
-                            checked = true,
+                            checked = state.inStockOnly,
                             onCheckedChange = { onCheckInStockOnlyChange(it) }
                         )
                     }
