@@ -54,9 +54,9 @@ class ProductRepositoryImpl
             }
     }
 
-    override fun getProductById(id: String): Flow<ProductModel?> {
-        TODO("Not yet implemented")
-    }
+    override fun getProductById(productId: String): Flow<ProductModel?> =
+        localDataSource.getProductById(productId = productId)
+            .map { entity -> entity?.toProductModel() }
 
     override suspend fun refreshProducts() {
         withContext(dispatchersProvider.io) {

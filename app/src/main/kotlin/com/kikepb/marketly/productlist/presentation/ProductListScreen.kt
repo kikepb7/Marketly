@@ -40,8 +40,9 @@ import com.kikepb.marketly.productlist.presentation.components.MarketlyProductIt
 
 @Composable
 fun ProductListRoot(
-     productListViewModel: ProductListViewModel = hiltViewModel(),
-    navigateToSettings: () -> Unit
+    productListViewModel: ProductListViewModel = hiltViewModel(),
+    navigateToSettings: () -> Unit,
+    navigateToProductDetail: (String) -> Unit
 ) {
     val state by productListViewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -64,7 +65,8 @@ fun ProductListRoot(
         onCategorySelected = { category -> productListViewModel.setCategory(category = category) },
         onSortSelected = { sortOption -> productListViewModel.setSortOption(sortOption = sortOption) },
         onSetFiltersVisibility = { showFilters -> productListViewModel.setFilterVisible(showFilters = showFilters) },
-        navigateToSettings = navigateToSettings
+        navigateToSettings = navigateToSettings,
+        navigateToProductDetail = navigateToProductDetail
     )
 }
 
@@ -76,7 +78,8 @@ fun ProductListScreen(
     onCategorySelected: (String?) -> Unit,
     onSortSelected: (SortOptionModel) -> Unit,
     onSetFiltersVisibility: (Boolean) -> Unit,
-    navigateToSettings: () -> Unit
+    navigateToSettings: () -> Unit,
+    navigateToProductDetail: (String) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -147,7 +150,7 @@ fun ProductListScreen(
                     } else {
                         LazyColumn {
                             items(state.products) { item ->
-                                MarketlyProductItem(item = item, onClick = {})
+                                MarketlyProductItem(item = item, onClick = { navigateToProductDetail(item.product.id) })
                             }
                         }
                     }
