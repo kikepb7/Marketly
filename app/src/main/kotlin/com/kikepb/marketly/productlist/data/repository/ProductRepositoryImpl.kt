@@ -58,6 +58,10 @@ class ProductRepositoryImpl
         localDataSource.getProductById(productId = productId)
             .map { entity -> entity?.toProductModel() }
 
+    override fun getProductsByIds(ids: Set<String>): Flow<List<ProductModel>> =
+        localDataSource.getProductsByIds(productsIds = ids)
+            .map { entities -> entities.mapNotNull { it.toProductModel() } }
+
     override suspend fun refreshProducts() {
         withContext(dispatchersProvider.io) {
             val products = remoteDataSource.getProducts().getOrThrow()
