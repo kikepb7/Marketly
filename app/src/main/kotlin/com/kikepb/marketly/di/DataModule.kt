@@ -5,6 +5,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
+import com.kikepb.marketly.cart.data.repository.CartRepositoryImpl
+import com.kikepb.marketly.cart.domain.repository.CartRepository
 import com.kikepb.marketly.core.domain.data.utils.DefaultDispatchersProvider
 import com.kikepb.marketly.core.domain.utils.DispatchersProvider
 import com.kikepb.marketly.core.data.local.database.MarketlyDatabase
@@ -41,6 +43,10 @@ object DataModule {
     @Provides
     @Singleton
     fun provideSettingsRepository(settingsRepositoryImpl: SettingsRepositoryImpl): SettingsRepository = settingsRepositoryImpl
+
+    @Provides
+    @Singleton
+    fun provideCartRepository(cartRepositoryImpl: CartRepositoryImpl): CartRepository = cartRepositoryImpl
 
     @Provides
     @Singleton

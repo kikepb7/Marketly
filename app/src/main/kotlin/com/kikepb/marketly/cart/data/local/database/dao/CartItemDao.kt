@@ -1,5 +1,6 @@
 package com.kikepb.marketly.cart.data.local.database.dao
 
+import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.Companion.REPLACE
@@ -8,6 +9,7 @@ import androidx.room.Update
 import com.kikepb.marketly.cart.data.local.database.entity.CartItemEntity
 import kotlinx.coroutines.flow.Flow
 
+@Dao
 interface CartItemDao {
 
     @Query("SELECT * FROM cart_items")
