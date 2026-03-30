@@ -32,7 +32,7 @@ fun MarketlyTopAppBar(
         navigationIcon = {
             IconButton(onClick = onBackSelected) {
                 Icon(
-                    Icons.AutoMirrored.Filled.ArrowBack,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "back",
                     tint = MaterialTheme.colorScheme.onSurface
                 )

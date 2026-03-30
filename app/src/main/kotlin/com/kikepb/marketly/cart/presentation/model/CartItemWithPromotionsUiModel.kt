@@ -5,5 +5,5 @@ import com.kikepb.marketly.productlist.domain.model.ProductWithPromotionModel
 
 data class CartItemWithPromotionsUiModel(
     val cartItem: CartItemModel,
-    val product: ProductWithPromotionModel
+    val item: ProductWithPromotionModel
 )
