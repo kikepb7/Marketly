@@ -41,7 +41,7 @@ class GetCartItemsWithPromotionsUseCase @Inject constructor(
                         val promotion = getPromotionForProductUseCase(product = product, promotions = activePromotions)
                         val productWithPromotion = ProductWithPromotionModel(product = product, promotion = promotion)
 
-                        CartItemWithPromotionsUiModel(cartItem = cartItem, product = productWithPromotion)
+                        CartItemWithPromotionsUiModel(cartItem = cartItem, item = productWithPromotion)
                     }
                 }
             }

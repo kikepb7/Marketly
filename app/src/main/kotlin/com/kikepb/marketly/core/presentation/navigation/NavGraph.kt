@@ -5,6 +5,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import com.kikepb.marketly.cart.presentation.CartRoot
 import com.kikepb.marketly.core.presentation.navigation.Screen.Cart
 import com.kikepb.marketly.core.presentation.navigation.Screen.ProductDetail
 import com.kikepb.marketly.core.presentation.navigation.Screen.ProductList
@@ -20,10 +21,11 @@ fun NavGraph() {
         entry<ProductList> {
             ProductListRoot(
                 navigateToSettings = { backStack.add(element = Setting) },
-                navigateToProductDetail = { backStack.add(element = ProductDetail(productId = it)) }
+                navigateToProductDetail = { backStack.add(element = ProductDetail(productId = it)) },
+                navigateToCart = { backStack.add(Cart) }
             )
         }
-        entry<Cart> {}
+        entry<Cart> { CartRoot(onBack = { backStack.removeLastOrNull() }) }
         entry<Setting> { SettingsScreenRoot(onBack = { backStack.removeLastOrNull() }) }
         entry<ProductDetail> {
             ProductDetailRoot(

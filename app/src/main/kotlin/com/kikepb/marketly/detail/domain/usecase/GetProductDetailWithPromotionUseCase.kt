@@ -1,5 +1,6 @@
 package com.kikepb.marketly.detail.domain.usecase
 
+import com.kikepb.marketly.cart.domain.utils.activeAt
 import com.kikepb.marketly.productlist.domain.model.ProductWithPromotionModel
 import com.kikepb.marketly.productlist.domain.repository.ProductRepository
 import com.kikepb.marketly.productlist.domain.repository.PromotionRepository
@@ -21,9 +22,7 @@ class GetProductDetailWithPromotionUseCase @Inject constructor(
             flow2 = promotionRepository.getActivePromotions()
         ) { product, promotions ->
             val now = Instant.now()
-            val activePromotions = promotions.filter {
-                it.startTime <= now && it.endTime >= now
-            }
+            val activePromotions = promotions.activeAt(now = now)
 
             product?.let {
                 val finalPromotion = getPromotionForProductUseCase(product = it, promotions = activePromotions)

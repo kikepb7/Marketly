@@ -10,6 +10,7 @@ import com.kikepb.marketly.productlist.domain.model.SortOptionModel.NONE
 import com.kikepb.marketly.productlist.domain.model.SortOptionModel.PRICE_ASC
 import com.kikepb.marketly.productlist.domain.model.SortOptionModel.PRICE_DESC
 import com.kikepb.marketly.productlist.domain.repository.SettingsRepository
+import com.kikepb.marketly.productlist.domain.usecase.GetCartItemCountUseCase
 import com.kikepb.marketly.productlist.domain.usecase.GetProductsUseCase
 import com.kikepb.marketly.productlist.presentation.ProductListUiState.Error
 import com.kikepb.marketly.productlist.presentation.ProductListUiState.Loading
@@ -34,7 +35,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ProductListViewModel @Inject constructor(
     private val getProductsUseCase: GetProductsUseCase,
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val getCartItemCountUseCase: GetCartItemCountUseCase
 ): ViewModel() {
     private val _uiState = MutableStateFlow<ProductListUiState>(value = Loading)
     val uiState: StateFlow<ProductListUiState> = _uiState.asStateFlow()
@@ -45,6 +47,9 @@ class ProductListViewModel @Inject constructor(
         initialValue = true,
         started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000)
     )
+    val cartItemCount = getCartItemCountUseCase().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000), initialValue = 0)
     private var productsJob: Job? = null
 
     init { loadProducts() }

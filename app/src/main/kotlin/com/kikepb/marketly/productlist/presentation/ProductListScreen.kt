@@ -42,11 +42,13 @@ import com.kikepb.marketly.productlist.presentation.components.MarketlyProductIt
 fun ProductListRoot(
     productListViewModel: ProductListViewModel = hiltViewModel(),
     navigateToSettings: () -> Unit,
-    navigateToProductDetail: (String) -> Unit
+    navigateToProductDetail: (String) -> Unit,
+    navigateToCart: () -> Unit
 ) {
     val state by productListViewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val isFiltersVisible by productListViewModel.filterVisible.collectAsStateWithLifecycle()
+    val cartItemCount by productListViewModel.cartItemCount.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
         productListViewModel.events.collect { event ->
@@ -62,11 +64,13 @@ fun ProductListRoot(
         state = state,
         snackbarHostState = snackbarHostState,
         isFilterVisible = isFiltersVisible,
+        cartItemCount = cartItemCount,
         onCategorySelected = { category -> productListViewModel.setCategory(category = category) },
         onSortSelected = { sortOption -> productListViewModel.setSortOption(sortOption = sortOption) },
         onSetFiltersVisibility = { showFilters -> productListViewModel.setFilterVisible(showFilters = showFilters) },
         navigateToSettings = navigateToSettings,
-        navigateToProductDetail = navigateToProductDetail
+        navigateToProductDetail = navigateToProductDetail,
+        navigateToCart = navigateToCart
     )
 }
 
@@ -75,18 +79,22 @@ fun ProductListScreen(
     state: ProductListUiState,
     snackbarHostState: SnackbarHostState,
     isFilterVisible: Boolean,
+    cartItemCount: Int,
     onCategorySelected: (String?) -> Unit,
     onSortSelected: (SortOptionModel) -> Unit,
     onSetFiltersVisibility: (Boolean) -> Unit,
     navigateToSettings: () -> Unit,
-    navigateToProductDetail: (String) -> Unit
+    navigateToProductDetail: (String) -> Unit,
+    navigateToCart: () -> Unit
 ) {
     Scaffold(
         topBar = {
             MarketlyHomeTopBar(
                 isFiltersVisible = isFilterVisible,
+                cartItemCount = cartItemCount,
                 onFiltersSelected = { showFilters -> onSetFiltersVisibility(showFilters) },
-                onSettingsSelected = navigateToSettings
+                onSettingsSelected = navigateToSettings,
+                onCartSelected =  navigateToCart
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }

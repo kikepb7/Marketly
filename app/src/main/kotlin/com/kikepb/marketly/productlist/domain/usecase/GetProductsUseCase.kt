@@ -1,5 +1,6 @@
 package com.kikepb.marketly.productlist.domain.usecase
 
+import com.kikepb.marketly.cart.domain.utils.activeAt
 import com.kikepb.marketly.productlist.domain.model.ProductWithPromotionModel
 import com.kikepb.marketly.productlist.domain.repository.ProductRepository
 import com.kikepb.marketly.productlist.domain.repository.PromotionRepository
@@ -22,7 +23,7 @@ class GetProductsUseCase @Inject constructor(
             flow3 = settingsRepository.inStockOnly
         ) { products, promotions, inStockOnly ->
             val now = Instant.now()
-            val activePromotions = promotions.filter { it.startTime <= now && it.endTime >= now }
+            val activePromotions = promotions.activeAt(now = now)
             val filteredProducts = if (inStockOnly) products.filter { it.stock > 0 }  else products
 
             filteredProducts.map { product ->

@@ -47,26 +47,50 @@ fun ProductDetailRoot(
     onBack: () -> Unit
 ) {
     val state by productDetailViewModel.state.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(key1 = productId) {
         productDetailViewModel.loadProduct(productId = productId)
     }
 
+    LaunchedEffect(key1 = Unit) {
+        productDetailViewModel.events.collect { event ->
+            when (event) {
+                ProductDetailEvent.NotEnoughStock -> {
+                    snackbarHostState.showSnackbar(message = "No hay suficiente stock")
+                }
+                ProductDetailEvent.NetworkError -> {
+                    snackbarHostState.showSnackbar(message = "No hay internet, compruebe su conexión")
+                }
+                ProductDetailEvent.UnknownError -> {
+                    snackbarHostState.showSnackbar(message = "Error inesperado, vuelva a intentarlo")
+                }
+                ProductDetailEvent.SuccessAddToCart -> {
+                    snackbarHostState.showSnackbar(message = "Producto añadido")
+                }
+            }
+        }
+    }
+
     ProductDetailScreen(
         state = state,
+        snackbarHost = snackbarHostState,
         onBack = onBack,
         addProductToCart = productDetailViewModel::addProductToCart
     )
 }
 
 @Composable
-fun ProductDetailScreen(state: ProductDetailUiState, onBack: () -> Unit, addProductToCart: () -> Unit) {
-    val snackbarHostState = remember { SnackbarHostState() }
-
+fun ProductDetailScreen(
+    state: ProductDetailUiState,
+    snackbarHost: SnackbarHostState,
+    onBack: () -> Unit,
+    addProductToCart: () -> Unit
+) {
     Scaffold(
         topBar = { MarketlyTopAppBar(title = state.item?.product?.name.orEmpty(), onBackSelected = onBack) },
         bottomBar = { MarketlyAddToCartButton(product = state.item?.product, isLoading = state.isLoading, addProductToCart = addProductToCart) },
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+        snackbarHost = { SnackbarHost(hostState = snackbarHost) }
     ) { paddingValues ->
         Column(
             modifier = Modifier
