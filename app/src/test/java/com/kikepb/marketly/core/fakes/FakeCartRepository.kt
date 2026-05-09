@@ -52,4 +52,6 @@ class FakeCartRepository: CartRepository {
 
     override suspend fun getCartItemById(productId: String): CartItemModel? =
         _cartItems.value.find { it.productId == productId }
+
+    fun setCartItems(items: List<CartItemModel>) { _cartItems.value = items }
 }
