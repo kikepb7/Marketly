@@ -21,6 +21,7 @@ coroutines = "1.10.2"
 ksp = "2.3.0"
 coreKtxVersion = "1.17.0"
 mockk = "1.14.9"
+turbine = "1.2.1"
 
 
 [libraries]
@@ -82,7 +83,10 @@ androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lif
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtxVersion" }
 
 #Mock
-mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk"}
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+
+#Turbine
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 
 [plugins]
