@@ -1,19 +1,20 @@
 package com.kikepb.marketly.detail.domain.usecase
 
 import com.kikepb.marketly.cart.domain.utils.activeAt
+import com.kikepb.marketly.core.domain.utils.ClockRepository
 import com.kikepb.marketly.productlist.domain.model.ProductWithPromotionModel
 import com.kikepb.marketly.productlist.domain.repository.ProductRepository
 import com.kikepb.marketly.productlist.domain.repository.PromotionRepository
 import com.kikepb.marketly.productlist.domain.usecase.GetPromotionForProductUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import java.time.Instant
 import javax.inject.Inject
 
 class GetProductDetailWithPromotionUseCase @Inject constructor(
     private val productRepository: ProductRepository,
     private val promotionRepository: PromotionRepository,
-    private val getPromotionForProductUseCase: GetPromotionForProductUseCase
+    private val getPromotionForProductUseCase: GetPromotionForProductUseCase,
+    private val clock: ClockRepository
 ) {
 
     operator fun invoke(productId: String): Flow<ProductWithPromotionModel?> =
@@ -21,7 +22,7 @@ class GetProductDetailWithPromotionUseCase @Inject constructor(
             flow = productRepository.getProductById(productId = productId),
             flow2 = promotionRepository.getActivePromotions()
         ) { product, promotions ->
-            val now = Instant.now()
+            val now = clock.now()
             val activePromotions = promotions.activeAt(now = now)
 
             product?.let {

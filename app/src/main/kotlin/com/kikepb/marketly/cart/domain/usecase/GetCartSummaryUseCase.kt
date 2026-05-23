@@ -4,6 +4,7 @@ import com.kikepb.marketly.cart.domain.model.CartItemModel
 import com.kikepb.marketly.cart.domain.model.CartSummaryModel
 import com.kikepb.marketly.cart.domain.repository.CartRepository
 import com.kikepb.marketly.cart.domain.utils.activeAt
+import com.kikepb.marketly.core.domain.utils.ClockRepository
 import com.kikepb.marketly.productlist.domain.model.ProductModel
 import com.kikepb.marketly.productlist.domain.model.ProductPromotion.BuyXPayY
 import com.kikepb.marketly.productlist.domain.model.ProductPromotion.Percent
@@ -16,14 +17,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import java.time.Instant
 import javax.inject.Inject
 
 class GetCartSummaryUseCase @Inject constructor(
     private val cartRepository: CartRepository,
     private val productRepository: ProductRepository,
     private val promotionRepository: PromotionRepository,
-    private val getPromotionForProductUseCase: GetPromotionForProductUseCase
+    private val getPromotionForProductUseCase: GetPromotionForProductUseCase,
+    private val clock: ClockRepository
 ) {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -46,7 +47,8 @@ class GetCartSummaryUseCase @Inject constructor(
                     calculateSummary(
                         cartItems = cartItems,
                         products = products,
-                        promotions = promotions
+                        promotions = promotions,
+                        clock = clock
                     )
                 }
             }
@@ -55,9 +57,10 @@ class GetCartSummaryUseCase @Inject constructor(
     private fun calculateSummary(
         cartItems: List<CartItemModel>,
         products: List<ProductModel>,
-        promotions: List<PromotionModel>
+        promotions: List<PromotionModel>,
+        clock: ClockRepository
     ): CartSummaryModel {
-        val now = Instant.now()
+        val now = clock.now()
         val activePromotions = promotions.activeAt(now = now)
 
         val productsById = products.associateBy { it.id }

@@ -3,6 +3,7 @@ package com.kikepb.marketly.cart.domain.usecase
 import com.kikepb.marketly.cart.domain.repository.CartRepository
 import com.kikepb.marketly.cart.domain.utils.activeAt
 import com.kikepb.marketly.cart.presentation.model.CartItemWithPromotionsUiModel
+import com.kikepb.marketly.core.domain.utils.ClockRepository
 import com.kikepb.marketly.productlist.domain.model.ProductWithPromotionModel
 import com.kikepb.marketly.productlist.domain.repository.ProductRepository
 import com.kikepb.marketly.productlist.domain.repository.PromotionRepository
@@ -12,7 +13,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import java.time.Instant
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -20,9 +20,9 @@ class GetCartItemsWithPromotionsUseCase @Inject constructor(
     private val cartRepository: CartRepository,
     private val productRepository: ProductRepository,
     private val promotionRepository: PromotionRepository,
-    private val getPromotionForProductUseCase: GetPromotionForProductUseCase
+    private val getPromotionForProductUseCase: GetPromotionForProductUseCase,
+    private val clock: ClockRepository
 ) {
-
     operator fun invoke(): Flow<List<CartItemWithPromotionsUiModel>> =
         cartRepository.getCartItems().flatMapLatest { cartItems ->
             val ids = cartItems.mapTo(destination = mutableSetOf()) { it.productId }
@@ -32,7 +32,7 @@ class GetCartItemsWithPromotionsUseCase @Inject constructor(
                     flow = productRepository.getProductsByIds(ids = ids),
                     flow2 = promotionRepository.getActivePromotions()
                 ) { products, promotions ->
-                    val now = Instant.now()
+                    val now = clock.now()
                     val activePromotions = promotions.activeAt(now)
                     val productsById = products.associateBy { it.id }
 
