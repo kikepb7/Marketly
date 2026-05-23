@@ -10,6 +10,8 @@ import com.kikepb.marketly.cart.domain.repository.CartRepository
 import com.kikepb.marketly.core.domain.data.utils.DefaultDispatchersProvider
 import com.kikepb.marketly.core.domain.utils.DispatchersProvider
 import com.kikepb.marketly.core.data.local.database.MarketlyDatabase
+import com.kikepb.marketly.core.data.utils.ClockRepositoryImpl
+import com.kikepb.marketly.core.domain.utils.ClockRepository
 import com.kikepb.marketly.productlist.data.repository.ProductRepositoryImpl
 import com.kikepb.marketly.productlist.data.repository.PromotionRepositoryImpl
 import com.kikepb.marketly.productlist.data.repository.SettingsRepositoryImpl
@@ -69,4 +71,8 @@ object DataModule {
     @Provides
     @Singleton
     fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> = context.dataStore
+
+    @Provides
+    @Singleton
+    fun provideClockRepository(clockRepositoryImpl: ClockRepositoryImpl): ClockRepository = clockRepositoryImpl
 }
