@@ -12,14 +12,12 @@ import com.kikepb.marketly.cart.presentation.CartUiState.Success
 import com.kikepb.marketly.cart.presentation.model.CartItemWithPromotionsUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,35 +25,28 @@ import javax.inject.Inject
 @HiltViewModel
 class CartViewModel @Inject constructor(
     private val cartRepository: CartRepository,
-    private val getCartSummaryUseCase: GetCartSummaryUseCase,
     private val updateCartItemUseCase: UpdateCartItemUseCase,
-    private val getCartItemsWithPromotionsUseCase: GetCartItemsWithPromotionsUseCase
+    getCartSummaryUseCase: GetCartSummaryUseCase,
+    getCartItemsWithPromotionsUseCase: GetCartItemsWithPromotionsUseCase
 ) : ViewModel() {
-    private val _state = MutableStateFlow<CartUiState>(Loading)
-    val state = _state.asStateFlow()
+
+    private val refreshTrigger = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    val state = combine(
+        flow = refreshTrigger.onStart { emit(value = Unit) },
+        flow2 = getCartItemsWithPromotionsUseCase(),
+        flow3 = getCartSummaryUseCase()
+    ) { _, cartItemWithPromotion, summary ->
+        Success(summary = summary, cartItems = cartItemWithPromotion, isLoading = false)
+    }.catch { e ->
+        _events.emit(value = CartEvent.ShowMessage(message = e.message.orEmpty()))
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
+        initialValue = Loading
+    )
 
     private val _events = MutableSharedFlow<CartEvent>(extraBufferCapacity = 1)
     val event = _events
-
-    var cartJob: Job? = null
-
-    init {
-        loadCart()
-    }
-
-    fun loadCart() {
-        _state.update { Loading }
-        cartJob?.cancel()
-
-        cartJob = combine(
-            flow = getCartItemsWithPromotionsUseCase(),
-            flow2 = getCartSummaryUseCase()
-        ) { cartItemWithPromotion, summary ->
-            _state.update { Success(summary = summary, cartItems = cartItemWithPromotion, isLoading = false) }
-        }.catch { e ->
-            _events.emit(value = CartEvent.ShowMessage(message = e.message.orEmpty()))
-        }.launchIn(scope = viewModelScope)
-    }
 
     fun updateCartItem(productId: String, quantity: Int) {
         viewModelScope.launch {
@@ -82,6 +73,8 @@ class CartViewModel @Inject constructor(
         if (currentQuantity > 1) updateCartItem(productId = productId, quantity = currentQuantity - 1)
         else removeFromCart(productId = productId)
     }
+
+    fun refresh() = refreshTrigger.tryEmit(value = Unit)
 }
 
 sealed class CartUiState {

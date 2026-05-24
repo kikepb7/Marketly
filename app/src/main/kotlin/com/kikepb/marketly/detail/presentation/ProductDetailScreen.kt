@@ -42,7 +42,7 @@ import com.kikepb.marketly.productlist.domain.model.ProductPromotion.Percent
 
 @Composable
 fun ProductDetailRoot(
-    productDetailViewModel: DetailViewModel = hiltViewModel(),
+    productDetailViewModel: ProductDetailViewModel = hiltViewModel(),
     productId: String,
     onBack: () -> Unit
 ) {

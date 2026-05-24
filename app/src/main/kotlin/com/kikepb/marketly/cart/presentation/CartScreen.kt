@@ -59,7 +59,7 @@ fun CartRoot(
         state = state,
         snackbarHostState = snackbarHostState,
         onBack = onBack,
-        loadCart = cartViewModel::loadCart,
+        loadCart = cartViewModel::refresh,
         onIncreaseQuantity = { productId, currentQuantity -> cartViewModel.increaseQuantity(productId = productId, currentQuantity = currentQuantity) },
         onDecreaseQuantity = { productId, currentQuantity -> cartViewModel.reduceQuantity(productId = productId, currentQuantity = currentQuantity) },
         onRemoveProduct = { productId -> cartViewModel.removeFromCart(productId = productId) }

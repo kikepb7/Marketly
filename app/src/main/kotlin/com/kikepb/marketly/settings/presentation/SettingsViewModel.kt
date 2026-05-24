@@ -5,11 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.kikepb.marketly.core.domain.model.ThemeModeModel
 import com.kikepb.marketly.productlist.domain.repository.SettingsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,21 +16,16 @@ class SettingsViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(value = SettingsState())
-    val state = _state.asStateFlow()
-
-    init {
-        loadSettings()
-    }
-
-    private fun loadSettings() {
-        combine(
-            flow = settingsRepository.inStockOnly,
-            flow2 = settingsRepository.themeMode
-        ) { inStockOnly, themeMode ->
-            _state.update { SettingsState(inStockOnly = inStockOnly, themeMode = themeMode) }
-        }.launchIn(scope = viewModelScope)
-    }
+    val state = combine(
+        flow = settingsRepository.inStockOnly,
+        flow2 = settingsRepository.themeMode
+    ) { inStockOnly, themeMode ->
+        SettingsState(inStockOnly = inStockOnly, themeMode = themeMode)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
+        initialValue = SettingsState()
+    )
 
     fun setInStockOnly(newState: Boolean) {
         viewModelScope.launch {

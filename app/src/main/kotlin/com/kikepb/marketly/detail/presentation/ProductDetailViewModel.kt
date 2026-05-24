@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DetailViewModel @Inject constructor(
+class ProductDetailViewModel @Inject constructor(
     private val getProductDetailWithPromotionUseCase: GetProductDetailWithPromotionUseCase,
     private val addToCartUseCase: AddToCartUseCase
 ) : ViewModel() {
